@@ -6,9 +6,15 @@
 
         <img src="{{ "/storage/$user->avatar" }}" alt="user avatar" class="w-20 h-20 rounded-full">
 
-        <p class="mt-1 text-sm text-gray-600 dark:text-gray-400">
-            {{ __("Add or update user avatar.") }}
-        </p>
+        <form action="{{ route('profile.avatar.ai') }}" method="POST">
+            @csrf
+            
+            <p class="mt-4 text-sm text-gray-600 dark:text-gray-400">
+                {{ __("Generate avatar from AI.") }}
+            </p>
+
+            <x-primary-button>Generate Avatar</x-primary-button>
+        </form>
     </header>
 
     <form method="post" action="{{ route('profile.avatar') }}" class="mt-6 space-y-6" enctype="multipart/form-data">
@@ -16,7 +22,7 @@
         @method('patch')
 
         <div>
-            <x-input-label for="avatar" :value="__('Avatar')" />
+            <x-input-label for="avatar" :value="__('Upload Avatar from computer')" />
             <x-text-input id="avatar" name="avatar" type="file" class="mt-1 block w-full" :value="old('avatar', $user->avatar)" required autofocus autocomplete="avatar" />
             <x-input-error class="mt-2" :messages="$errors->get('avatar')" />
         </div>
