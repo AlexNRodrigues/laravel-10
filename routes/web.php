@@ -2,7 +2,10 @@
 
 use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\ProfileController;
+use App\Models\User;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use Laravel\Socialite\Facades\Socialite;
 use OpenAI\Laravel\Facades\OpenAI;
 
 /*
@@ -34,3 +37,23 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__.'/auth.php';
+
+Route::post('/auth/redirect', function () {
+    return Socialite::driver('github')->redirect();
+})->name('auth.github');
+
+Route::get('/auth/callback', function () {
+    $githubUser = Socialite::driver('github')->user();
+    
+    $user = User::updateOrCreate([
+        'email' => $githubUser->email,
+    ], [
+        'username' => $githubUser->nickname,
+        'email'    => $githubUser->email,
+        'password' => $githubUser->nickname
+    ]);
+ 
+    Auth::login($user);
+ 
+    return redirect(route('dashboard'));
+});

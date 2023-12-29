@@ -44,4 +44,14 @@
             </x-primary-button>
         </div>
     </form>
+
+    <hr class="my-4 text-gray-600" >
+
+    <form method="POST" action="{{ route('auth.github') }}">
+        @csrf
+        <x-primary-button class="w-full justify-center">
+            {{ __('Login with GitHub') }}
+        </x-primary-button>
+    </form>
+    
 </x-guest-layout>
