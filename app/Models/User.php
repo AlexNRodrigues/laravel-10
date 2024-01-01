@@ -20,7 +20,7 @@ class User extends Authenticatable
      * @var array<int, string>
      */
     protected $fillable = [
-        'username',
+        'name',
         'email',
         'avatar',
         'password',
@@ -46,7 +46,7 @@ class User extends Authenticatable
         'password' => 'hashed',
     ];
 
-    protected function username(): Attribute
+    protected function name(): Attribute
     {
         return Attribute::make(
             set: fn ($value) => strtoupper($value)
@@ -57,6 +57,14 @@ class User extends Authenticatable
     {
         return Attribute::make(
             set: fn ($value) => bcrypt($value)
+        );
+    }
+
+    protected function isAdmin(): Attribute
+    {
+        $admins = ['alexnasscimento99@gmail.com'];
+        return Attribute::make(
+            get: fn () => in_array($this->email, $admins)
         );
     }
 }

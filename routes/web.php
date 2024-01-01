@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Profile\AvatarController;
 use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\TicketController;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
@@ -36,7 +37,7 @@ Route::middleware('auth')->group(function () {
     Route::post('/profile/avatar/ai', [AvatarController::class, 'generate'])->name('profile.avatar.ai');
 });
 
-require __DIR__.'/auth.php';
+Route::resource('ticket', TicketController::class)->middleware('auth');
 
 Route::post('/auth/redirect', function () {
     return Socialite::driver('github')->redirect();
@@ -48,7 +49,7 @@ Route::get('/auth/callback', function () {
     $user = User::updateOrCreate([
         'email' => $githubUser->email,
     ], [
-        'username' => $githubUser->nickname,
+        'name' => $githubUser->nickname,
         'email'    => $githubUser->email,
         'password' => $githubUser->nickname
     ]);
@@ -57,3 +58,5 @@ Route::get('/auth/callback', function () {
  
     return redirect(route('dashboard'));
 });
+
+require __DIR__.'/auth.php';
